@@ -1,20 +1,27 @@
-const { generateAccessToken, verifyRefreshToken } = require("../services/tokenServices");
+const {
+    generateAccessToken,
+    verifyRefreshToken,
+} = require('../services/tokenServices');
+const RefreshToken = require('../models/refreshToken');
 
-const handleRefreshToken = (req, res) => {
+const handleRefreshToken = async (req, res) => {
     const token = req.cookies.refreshToken;
-  
-    if (!token) {
-      return res.status(401).json({ error: 'No refresh token' });
-    }
-  
-    const decoded = verifyRefreshToken(token);
-  
-    if (!decoded) {
-      return res.status(403).json({ error: 'Invalid refresh token' });
-    }
-  
-    const newAccessToken = generateAccessToken(decoded.id);
-    res.json({ accessToken: newAccessToken });
-  };
+    if (!token) return res.status(401).json({ error: 'No refresh token' });
 
-  module.exports = handleRefreshToken;
+    try {
+        const decoded = verifyRefreshToken(token);
+        const savedToken = await RefreshToken.findOne({ token });
+
+        if (!savedToken || savedToken.userId.toString() !== decoded.id) {
+            return res.status(403).json({ error: 'Invalid refresh token' });
+        }
+
+        const accessToken = generateAccessToken(decoded.id);
+        res.json({ accessToken });
+    } catch (err) {
+        console.error(err.message);
+        res.status(403).json({ error: 'Invalid refresh token' });
+    }
+};
+
+module.exports = handleRefreshToken;

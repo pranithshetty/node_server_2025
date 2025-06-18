@@ -1,23 +1,31 @@
 {
-  "name": "server-pract",
-  "version": "1.0.0",
-  "main": "index.js",
-  "scripts": {
-    "serve": "node index.js"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "description": "",
-  "dependencies": {
-    "bcrypt": "^6.0.0",
-    "cookie-parser": "^1.4.7",
-    "cors": "^2.8.5",
-    "dotenv": "^16.5.0",
-    "express": "^5.1.0",
-    "express-rate-limit": "^7.5.0",
-    "google-auth-library": "^10.1.0",
-    "jsonwebtoken": "^9.0.2",
-    "mongoose": "^8.16.0"
-  }
+    "name": "server-pract",
+    "version": "1.0.0",
+    "main": "index.js",
+    "scripts": {
+        "serve": "node index.js",
+        "lint": "eslint .",
+        "lint-fix": "eslint --fix ."
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "description": "",
+    "dependencies": {
+        "bcrypt": "^6.0.0",
+        "cookie-parser": "^1.4.7",
+        "cors": "^2.8.5",
+        "dotenv": "^16.5.0",
+        "express": "^5.1.0",
+        "express-rate-limit": "^7.5.0",
+        "google-auth-library": "^10.1.0",
+        "jsonwebtoken": "^9.0.2",
+        "mongoose": "^8.16.0"
+    },
+    "devDependencies": {
+        "@eslint/js": "^9.29.0",
+        "eslint": "^9.29.0",
+        "eslint-plugin-n": "^17.20.0",
+        "globals": "^16.2.0"
+    }
 }
