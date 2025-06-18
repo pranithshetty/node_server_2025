@@ -11,7 +11,7 @@ function logFileMiddleware() {
             if (err) {
                 console.error('Logging error:', err);
             }
-            next(); 
+            next();
         });
     };
 }
