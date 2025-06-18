@@ -1,27 +1,48 @@
 const jwt = require("jsonwebtoken");
 
-const generateToken = (id)=>{
-    return jwt.sign({id}, process.env.JWT_SECRET, {
-        expiresIn: '1d'
-    } )
+//legacy
+// const generateToken = (id, expiry = '15m') => {
+//   return jwt.sign({ id }, process.env.JWT_SECRET, {
+//     expiresIn: expiry
+//   })
+// }
+
+const generateAccessToken = (id, expiry = '15m') => {
+  return jwt.sign({ id }, process.env.JWT_ACCESS_SECRET, {
+    expiresIn: expiry
+  })
 }
 
-const verifyToken = (req, res, next) => {
-    const authHeader = req.headers['authorization'];
-  
-    if (!authHeader || !authHeader.startsWith('Bearer ')) {
-      return res.status(401).json({ error: 'Missing or malformed token' });
-    }
-  
-    const token = authHeader.split(' ')[1];
-  
-    try {
-      const decoded = jwt.verify(token, process.env.JWT_SECRET);
-      req.user = decoded;
-      next();
-    } catch (err) {
-      return res.status(401).json({ error: 'Invalid token' });
-    }
-  };
+const generateRefreshToken = (id, expiry = '2d') => {
+  return jwt.sign({ id }, process.env.JWT_REFRESH_SECRET, {
+    expiresIn: expiry
+  })
+}
 
-module.exports = {generateToken, verifyToken}
+const verifyAccessToken = (req, res, next) => {
+  const authHeader = req.headers['authorization'];
+
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    return res.status(401).json({ error: 'Missing or malformed token' });
+  }
+
+  const token = authHeader.split(' ')[1];
+
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_ACCESS_SECRET);
+    req.user = decoded;
+    next();
+  } catch (err) {
+    return res.status(401).json({ error: 'Invalid token' });
+  }
+};
+
+const verifyRefreshToken = (token) => {
+  try {
+    return jwt.verify(token, process.env.JWT_REFRESH_SECRET);
+  } catch (err) {
+    return null;
+  }
+};
+
+module.exports = { verifyAccessToken, generateAccessToken, generateRefreshToken, verifyRefreshToken }
